@@ -10,7 +10,7 @@ const contentToCache = [
   "/icon-512x512.png",
 ];
 const serverUrlLocal = "http://localhost:8000";
-const serverUrl = "https://f9c9-104-148-225-1.ngrok-free.app";
+const serverUrl = "https://offline-inspections-server.vercel.app/";
 const clientUrlLocal = "http://localhost:4173";
 const clientUrlDev = "https://clientdev.clean-really-bullfrog.ngrok-free.app";
 

@@ -3,7 +3,7 @@ import { ToastContainer } from "react-toastify";
 import RootNavigator from "./navigators/rootNavigator";
 import { ChakraProvider } from "@chakra-ui/react";
 import "react-toastify/dist/ReactToastify.css";
-export const serverUrl = "https://server.clean-really-bullfrog.ngrok-free.app";
+export const serverUrl = "https://offline-inspections-server.vercel.app/";
 function App() {
   return (
     <>

@@ -11,6 +11,7 @@ export default function Photo({ post }: { post: PostSchemaType }) {
           style={{ objectFit: "contain" }}
           className="rounded-md h-48"
         />
+        <p>{post.imageUrl}</p>
       </div>
       <Text fontSize={"md"} color={"gray.300"}>
         {post.caption || <i>No Caption</i>}

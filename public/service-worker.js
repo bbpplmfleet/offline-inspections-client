@@ -12,7 +12,6 @@ const contentToCache = [
 const serverUrlLocal = "http://localhost:8000";
 const serverUrl = "https://offline-inspections-server.vercel.app/";
 const clientUrlLocal = "http://localhost:4173";
-const clientUrlDev = "https://clientdev.clean-really-bullfrog.ngrok-free.app";
 
 async function handleUpload(posts) {
   let response;

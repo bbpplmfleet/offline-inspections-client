@@ -1,5 +1,5 @@
 const cacheName = "pwapoc";
-const version = "0.1.4";
+const version = "0.1.5";
 const DBName = "plm_poc";
 const DBVersion = 9;
 const contentToCache = [
@@ -10,7 +10,7 @@ const contentToCache = [
   "/icon-512x512.png",
 ];
 const serverUrlLocal = "http://localhost:8000";
-const serverUrl = "https://offline-inspections-server.vercel.app/";
+const serverUrl = "https://offline-inspections-server.vercel.app";
 const clientUrlLocal = "http://localhost:4173";
 
 async function handleUpload(posts) {

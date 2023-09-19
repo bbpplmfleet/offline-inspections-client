@@ -34,7 +34,6 @@ export default function AppHeader({ activeTab }: { activeTab: string }) {
   }
   async function checkOnlineStatus() {
     try {
-      setOnlineStatus("checking");
       let result = await axios.get(`${serverUrl}/`);
       if (result.data) {
         setOnlineStatus("online");
@@ -54,10 +53,13 @@ export default function AppHeader({ activeTab }: { activeTab: string }) {
       console.log(err);
     }
   }
+
   useEffect(() => {
-    checkServiceWorkerVersion();
-    checkOnlineStatus();
-    checkNotificationStatus();
+    (async () => {
+      await checkServiceWorkerVersion();
+      await checkOnlineStatus();
+      await checkNotificationStatus();
+    })();
   }, []);
   return (
     <div className="pb-8 w-full px-6 md:px-10 pt-6 bg-gray-900">

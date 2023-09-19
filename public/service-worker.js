@@ -291,7 +291,7 @@ self.addEventListener("message", async (e) => {
     try {
       const response = await handleUpload(e.data.posts);
       console.log("upload to db res: ", response);
-      e.ports[0].postMessage(response);
+      e.ports[0].postMessage({ status: "success", response: response });
     } catch (err) {
       console.log("something failed uploading to db");
       requestBackgroundSync();

@@ -43,21 +43,32 @@ export default function AppHeader({ activeTab }: { activeTab: string }) {
       console.log("error checking status", e);
     }
   }
-  async function checkServiceWorkerVersion() {
-    try {
-      let hasNew = await handleSkipWaiting();
-      if (hasNew) {
-        window.location.reload();
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
+
   async function handleInitialSetup() {
-    await checkServiceWorkerVersion();
     await checkOnlineStatus();
     await checkNotificationStatus();
   }
+  let lastUpdateCheckTime = 0;
+  const updateCheckInterval = 60000; // 1 minute in milliseconds
+
+  async function checkServiceWorkerVersion() {
+    const currentTime = Date.now();
+    if (currentTime - lastUpdateCheckTime >= updateCheckInterval) {
+      lastUpdateCheckTime = currentTime;
+      try {
+        let hasNew = await handleSkipWaiting();
+        if (hasNew) {
+          window.location.reload();
+        } else {
+          console.log("has new service worker?: ", hasNew);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
+
+  setInterval(checkServiceWorkerVersion, updateCheckInterval);
   useEffect(() => {
     handleInitialSetup();
   }, []);

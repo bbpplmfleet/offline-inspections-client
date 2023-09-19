@@ -8,7 +8,7 @@ export async function handleSkipWaiting() {
     let message = await wb.messageSW({
       type: "SKIP_WAITING",
     });
-    if (message) {
+    if (message === "hasNew") {
       toastHelper({ type: "info", message: `message: ${message}` });
       return true;
     }

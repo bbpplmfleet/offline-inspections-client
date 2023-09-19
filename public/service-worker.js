@@ -282,7 +282,7 @@ self.addEventListener("message", async (e) => {
 
   if (e.data && e.data.type === "SKIP_WAITING") {
     self.skipWaiting();
-    e.ports[0].postMessage("starting upgrade process");
+    e.ports[0].postMessage("hasNew");
   }
 
   if (data && data.type === "UPLOAD_TO_DB") {

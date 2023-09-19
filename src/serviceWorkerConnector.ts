@@ -27,6 +27,7 @@ export async function handleUploadPostsForSync(posts: PostType[]) {
       type: "UPLOAD_TO_DB",
       posts: posts,
     });
+    toastHelper({ type: "info", message: `message from wb: ${message}` });
     if (message === "success") {
       posts.forEach((post) => removeFromCache(post));
       toastHelper({ type: "success", message: "Posts uploaded" });

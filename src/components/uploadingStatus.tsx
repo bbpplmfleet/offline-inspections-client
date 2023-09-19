@@ -18,7 +18,7 @@ export default function UploadingStatus({
     // use the SW to upload so we can more easily register a bg sync
     console.log("starting upload");
     let posted = await handleUploadPostsForSync(posts);
-    console.log("posted", posted);
+    toastHelper({ type: "info", message: `posted:  ${posted}` });
     if (posted) {
       toastHelper({
         message: "Post Uploaded Successfully!",

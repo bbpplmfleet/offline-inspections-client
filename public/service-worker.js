@@ -1,5 +1,5 @@
 const cacheName = "pwapoc";
-const version = "0.1.11";
+const version = "0.1.12";
 const DBName = "plm_poc";
 const DBVersion = 9;
 const contentToCache = [
@@ -289,7 +289,7 @@ self.addEventListener("message", async (e) => {
     try {
       const response = await handleUpload(e.data.posts);
       console.log("upload to db res: ", response);
-      e.ports[0].postMessage("success");
+      e.ports[0].postMessage(response);
     } catch (err) {
       console.log("something failed uploading to db");
       requestBackgroundSync();

@@ -1,5 +1,5 @@
 const cacheName = "pwapoc";
-const version = "0.1.16";
+const version = "0.1.17";
 const DBName = "plm_poc";
 const DBVersion = 9;
 const contentToCache = [
@@ -79,6 +79,7 @@ async function initDB() {
 }
 async function handleUpload(posts) {
   let response;
+  let responseData;
   try {
     response = await fetch(`${serverUrl}/photos`, {
       method: "POST",
@@ -87,14 +88,15 @@ async function handleUpload(posts) {
       },
       body: JSON.stringify({ posts }),
     });
-    console.log("upload post request response", response);
+    responseData = await response.json();
+    console.log("upload post request response", responseData);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
   } catch (err) {
     throw new Error(`HTTP error! Error: ${err}`);
   }
-  return JSON.stringify(response);
+  return responseData;
 }
 function handleNotification({ title, description, action, cta, destination }) {
   self.registration.showNotification(title, {

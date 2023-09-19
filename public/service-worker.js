@@ -1,5 +1,5 @@
 const cacheName = "pwapoc";
-const version = "0.1.6";
+const version = "0.1.7";
 const DBName = "plm_poc";
 const DBVersion = 9;
 const contentToCache = [
@@ -9,42 +9,9 @@ const contentToCache = [
   "/icons-384x384.png",
   "/icon-512x512.png",
 ];
-const serverUrlLocal = "http://localhost:8000";
 const serverUrl = "https://offline-inspections-server.vercel.app";
-const clientUrlLocal = "http://localhost:4173";
 const clientUrl = "https://offline-inspections-client.vercel.app";
-async function handleUpload(posts) {
-  let response;
-  try {
-    response = await fetch(`${serverUrl}/photos`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ posts }),
-    });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-  } catch (err) {
-    throw new Error(`HTTP error! Error: ${err}`);
-  }
-  return response.json();
-}
-function handleNotification({ title, description, action, cta, destination }) {
-  self.registration.showNotification(title, {
-    icon: "/icon-192x192.png",
-    body: description,
-    actions: [
-      {
-        action,
-        title: cta,
-        url: destination,
-      },
-    ],
-  });
-}
 // set up and upgrade
 self.addEventListener("install", (e) => {
   console.log("[Service Worker] Install");
@@ -70,7 +37,14 @@ self.addEventListener("activate", function (e) {
     })
   );
 });
-
+function handleVersionChange(db) {
+  db.onversionchange = (event) => {
+    db.close();
+    console.log(
+      "A new version of this page is ready. Please reload or close this tab!"
+    );
+  };
+}
 async function initDB() {
   return new Promise((resolve, reject) => {
     const openReq = indexedDB.open(DBName, DBVersion);
@@ -103,15 +77,39 @@ async function initDB() {
     };
   });
 }
+async function handleUpload(posts) {
+  let response;
+  try {
+    response = await fetch(`${serverUrl}/photos`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ posts }),
+    });
 
-function handleVersionChange(db) {
-  db.onversionchange = (event) => {
-    db.close();
-    console.log(
-      "A new version of this page is ready. Please reload or close this tab!"
-    );
-  };
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (err) {
+    throw new Error(`HTTP error! Error: ${err}`);
+  }
+  return response.json();
 }
+function handleNotification({ title, description, action, cta, destination }) {
+  self.registration.showNotification(title, {
+    icon: "/icon-192x192.png",
+    body: description,
+    actions: [
+      {
+        action,
+        title: cta,
+        url: destination,
+      },
+    ],
+  });
+}
+
 async function getAllPostsFromIDB(db) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction("posts", "readonly");

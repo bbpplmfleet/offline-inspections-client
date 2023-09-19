@@ -14,10 +14,16 @@ export async function handleUploadPostsForSync(posts: PostType[]) {
     });
     if (message === "success") {
       posts.forEach((post) => removeFromCache(post));
+      toastHelper({ type: "success", message: "Posts uploaded" });
       return true;
     }
   } catch (err) {
     console.log("Failed to upload:", err);
+    toastHelper({
+      type: "error",
+      message:
+        "We couldn't upload your posts and something went wrong saving them for offline support",
+    });
     return false;
   }
 }
@@ -39,7 +45,7 @@ export async function removeFromCache(postToRemove: PostType) {
     toastHelper({
       type: "warn",
       message:
-        "We couldn't remove your post locally, you might see a duplicate soon",
+        "We couldn't remove your post locally, you might see a duplicate soon (1)",
     });
   }
 }
@@ -60,7 +66,7 @@ export async function addToCache(postToCache: PostType) {
     toastHelper({
       type: "error",
       message:
-        "Something went wrong saving your post for offline support - don't close the app",
+        "Something went wrong saving your post for offline support - don't close the app (2)",
     });
   }
 }
@@ -71,27 +77,29 @@ export async function getAllFromCache() {
     wb.register();
     let posts = await wb.messageSW({ type: "GET_ALL_POSTS" });
     let formattedPosts: PostType[] = [];
-    posts.posts.forEach((post: DBPostType) => {
-      let newPhoto: FileType = {
-        url: post.localUrl,
-        encoded: post.encodedUrl,
-        name: post.altText,
-      };
-      let newPost: PostType = {
-        id: post.id,
-        caption: post.caption,
-        createdAt: post.createdAt,
-        photo: newPhoto,
-      };
-      formattedPosts.push(newPost);
-    });
+    if (!!posts.posts) {
+      posts.posts.forEach((post: DBPostType) => {
+        let newPhoto: FileType = {
+          url: post.localUrl,
+          encoded: post.encodedUrl,
+          name: post.altText,
+        };
+        let newPost: PostType = {
+          id: post.id,
+          caption: post.caption,
+          createdAt: post.createdAt,
+          photo: newPhoto,
+        };
+        formattedPosts.push(newPost);
+      });
+    }
     console.log("successfully got all posts from cache");
     return formattedPosts;
   } catch (err) {
     console.log("error getting all posts from cache", err);
     toastHelper({
       type: "error",
-      message: "Something went wrong saving your post for offline support",
+      message: "Something went wrong saving your post for offline support (3)",
     });
     return [];
   }

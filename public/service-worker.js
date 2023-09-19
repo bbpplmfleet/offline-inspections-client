@@ -1,5 +1,5 @@
 const cacheName = "pwapoc";
-const version = "0.1.7";
+const version = "0.1.8";
 const DBName = "plm_poc";
 const DBVersion = 9;
 const contentToCache = [
@@ -277,13 +277,16 @@ function requestBackgroundSync() {
 // WORKBOX 2-WAY MESSAGING
 self.addEventListener("message", async (e) => {
   let data = e.data;
-  console.log("Message Event Listen Accessed");
+  console.log("Message Event Accessed");
   const db = await initDB();
+
   if (data && data.type === "UPLOAD_TO_DB") {
-    const response = await handleUpload(e.data.posts);
-    if (response.ok) {
+    try {
+      const response = await handleUpload(e.data.posts);
+      console.log("upload to db res: ", response);
       e.ports[0].postMessage("success");
-    } else {
+    } catch (err) {
+      console.log("something failed uploading to db");
       requestBackgroundSync();
       e.ports[0].postMessage("failure");
     }

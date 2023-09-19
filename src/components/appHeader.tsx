@@ -4,6 +4,7 @@ import { Button, Tag, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { serverUrl } from "../App";
+import { handleSkipWaiting } from "../serviceWorkerConnector";
 
 export default function AppHeader({ activeTab }: { activeTab: string }) {
   type OnlineStatusType = "online" | "offline" | "checking";
@@ -43,7 +44,18 @@ export default function AppHeader({ activeTab }: { activeTab: string }) {
       console.log("error checking status", e);
     }
   }
+  async function checkServiceWorkerVersion() {
+    try {
+      let hasNew = await handleSkipWaiting();
+      if (hasNew) {
+        window.location.reload();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
   useEffect(() => {
+    checkServiceWorkerVersion();
     checkOnlineStatus();
     checkNotificationStatus();
   }, []);

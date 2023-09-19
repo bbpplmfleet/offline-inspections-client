@@ -1,7 +1,22 @@
 import { Workbox } from "workbox-window";
 import { toastHelper } from "./components/utils";
 import { DBPostType, FileType, PostType } from "./types";
-
+export async function handleSkipWaiting() {
+  try {
+    const wb = new Workbox("/service-worker.js");
+    wb.register();
+    let message = await wb.messageSW({
+      type: "SKIP_WAITING",
+    });
+    if (message) {
+      toastHelper({ type: "info", message: `message: ${message}` });
+      return true;
+    }
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+}
 export async function handleUploadPostsForSync(posts: PostType[]) {
   console.log("in SW connector (uploading)");
   try {

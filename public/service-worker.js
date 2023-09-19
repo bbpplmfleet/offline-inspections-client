@@ -1,5 +1,5 @@
 const cacheName = "pwapoc";
-const version = "0.1.8";
+const version = "0.1.9";
 const DBName = "plm_poc";
 const DBVersion = 9;
 const contentToCache = [
@@ -279,6 +279,11 @@ self.addEventListener("message", async (e) => {
   let data = e.data;
   console.log("Message Event Accessed");
   const db = await initDB();
+
+  if (e.data && e.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+    e.ports[0].postMessage("starting upgrade process");
+  }
 
   if (data && data.type === "UPLOAD_TO_DB") {
     try {

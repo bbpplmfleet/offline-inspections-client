@@ -1,5 +1,5 @@
 const cacheName = "pwapoc";
-const version = "0.1.9";
+const version = "0.1.11";
 const DBName = "plm_poc";
 const DBVersion = 9;
 const contentToCache = [

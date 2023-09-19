@@ -53,13 +53,13 @@ export default function AppHeader({ activeTab }: { activeTab: string }) {
       console.log(err);
     }
   }
-
+  async function handleInitialSetup() {
+    await checkServiceWorkerVersion();
+    await checkOnlineStatus();
+    await checkNotificationStatus();
+  }
   useEffect(() => {
-    (async () => {
-      await checkServiceWorkerVersion();
-      await checkOnlineStatus();
-      await checkNotificationStatus();
-    })();
+    handleInitialSetup();
   }, []);
   return (
     <div className="pb-8 w-full px-6 md:px-10 pt-6 bg-gray-900">

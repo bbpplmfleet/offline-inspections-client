@@ -80,25 +80,8 @@ export default function UploadPosts() {
     console.log(navigator);
     if ("serviceWorker" in navigator) {
       console.log("A service worker exists in navigator");
-      // navigator.permissions
-      //   .query({ name: "periodic-background-sync" })
-      //   .then((status) => {
-      //     console.log("background-sync permissions:", status);
-      //   });
       navigator.serviceWorker.register("/service-worker.js").then(async () => {
         fetchCache();
-        // console.log("sync init started");
-        // await requestBackgroundSyncForFailedPosts(registration);
-        // console.log("sync init finished");
-        // registerBackgroundSync();
-        // Use type assertion to handle TypeScript error
-        // if ("SyncManager" in window && (registration as any).sync) {
-        //   (registration as any).sync.register("failed-upload", {
-        //     maxRetentionTime: 24 * 60,
-        //   });
-        //   console.log("Registering: SYNC MANAGER");
-        //   console.log(registration);
-        // }
       });
     }
   }, []);
@@ -109,7 +92,7 @@ export default function UploadPosts() {
 
       <main
         id="upload-page"
-        className="flex min-h-screen flex-col items-start justify-start p-12 bg-black w-full"
+        className="flex min-h-screen flex-col items-start justify-start px-2 py-8 md:p-12 md:px-6 lg:px-12 bg-black w-full"
       >
         <UploadingStatus data={data} dispatch={dispatch} />
         <div

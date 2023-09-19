@@ -1,5 +1,5 @@
 const cacheName = "pwapoc";
-const version = "0.1.15";
+const version = "0.1.16";
 const DBName = "plm_poc";
 const DBVersion = 9;
 const contentToCache = [
@@ -87,6 +87,7 @@ async function handleUpload(posts) {
       },
       body: JSON.stringify({ posts }),
     });
+    console.log("upload post request response", response);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }

@@ -1,5 +1,5 @@
 const cacheName = "pwapoc";
-const version = "0.1.14";
+const version = "0.1.15";
 const DBName = "plm_poc";
 const DBVersion = 9;
 const contentToCache = [
@@ -93,7 +93,7 @@ async function handleUpload(posts) {
   } catch (err) {
     throw new Error(`HTTP error! Error: ${err}`);
   }
-  return response.json();
+  return JSON.stringify(response);
 }
 function handleNotification({ title, description, action, cta, destination }) {
   self.registration.showNotification(title, {

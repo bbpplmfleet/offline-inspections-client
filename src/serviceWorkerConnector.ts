@@ -120,3 +120,60 @@ export async function getAllFromCache() {
     return [];
   }
 }
+export async function handleHardRefresh(): Promise<void> {
+  try {
+    // Find the currently installed Service Worker
+    const cacheNames = await caches.keys();
+    const currentCacheName = cacheNames.find((name) =>
+      name.startsWith("pwapoc")
+    );
+
+    if (!currentCacheName) {
+      // No existing cache found, nothing to do
+      console.log("No cached Service Worker found.");
+
+      return;
+    }
+
+    // Clear all caches except for the current one
+    await Promise.all(
+      cacheNames.map(async (cacheName) => {
+        if (cacheName !== currentCacheName) {
+          await caches.delete(cacheName);
+          console.log(`Deleted cache: ${cacheName}`);
+        }
+      })
+    );
+
+    // Fetch the newest Service Worker
+    const response = await fetch("/service-worker.js");
+
+    if (!response.ok) {
+      // Fetching the Service Worker failed
+      console.log(`Failed to fetch the Service Worker: ${response.status}`);
+      return;
+    }
+
+    // Install the newest Service Worker
+    const newServiceWorker = await response.text();
+    await caches.open(currentCacheName).then((cache) => {
+      cache.put("/service-worker.js", new Response(newServiceWorker));
+      console.log("Newest Service Worker installed");
+    });
+
+    // Log the version of the Service Worker
+    const installedServiceWorker = await caches.match("/service-worker.js");
+    if (!!installedServiceWorker) {
+      const installedServiceWorkerText = await installedServiceWorker.text();
+      const versionMatch = installedServiceWorkerText.match(
+        /const cacheVersion = '([^']+)';/
+      );
+      if (versionMatch) {
+        const version = versionMatch[1];
+        console.log(`Service Worker version in cache: ${version}`);
+      }
+    }
+  } catch (err) {
+    console.error("Error during hard refresh:", err);
+  }
+}

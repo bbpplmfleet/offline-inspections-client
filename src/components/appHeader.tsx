@@ -4,7 +4,10 @@ import { Button, Tag, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { serverUrl } from "../App";
-import { handleSkipWaiting } from "../serviceWorkerConnector";
+import {
+  handleHardRefresh,
+  handleSkipWaiting,
+} from "../serviceWorkerConnector";
 
 export default function AppHeader({ activeTab }: { activeTab: string }) {
   type OnlineStatusType = "online" | "offline" | "checking";
@@ -49,7 +52,7 @@ export default function AppHeader({ activeTab }: { activeTab: string }) {
     await checkNotificationStatus();
   }
   let lastUpdateCheckTime = 0;
-  const updateCheckInterval = 60000; // 1 minute in milliseconds
+  const updateCheckInterval = 60000 * 10; // 10 minute in milliseconds
 
   async function checkServiceWorkerVersion() {
     const currentTime = Date.now();
@@ -69,6 +72,7 @@ export default function AppHeader({ activeTab }: { activeTab: string }) {
   }
 
   setInterval(checkServiceWorkerVersion, updateCheckInterval);
+
   useEffect(() => {
     handleInitialSetup();
   }, []);
@@ -98,7 +102,7 @@ export default function AppHeader({ activeTab }: { activeTab: string }) {
         </Text>
       </div>
       <div className="flex flex-row justify-between items-center flex-wrap w-full my-2">
-        <div className="flex flex-row justify-start">
+        <div className="flex flex-row justify-start gap-3">
           <Tag
             onClick={() => checkOnlineStatus()}
             size={"lg"}
@@ -114,18 +118,23 @@ export default function AppHeader({ activeTab }: { activeTab: string }) {
           >
             Status: {onlineStatus}
           </Tag>
-          <div>
-            <Button
-              variant="outline"
-              colorScheme="whiteAlpha"
-              disabled={notificationStatus === "granted"}
-              onClick={() => grantNotifications()}
-            >
-              {notificationStatus !== "granted"
-                ? "Allow Notifications"
-                : "Notifications enabled"}
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            colorScheme="whiteAlpha"
+            disabled={notificationStatus === "granted"}
+            onClick={() => grantNotifications()}
+          >
+            {notificationStatus !== "granted"
+              ? "Allow Notifications"
+              : "Notifications enabled"}
+          </Button>
+          <Button
+            variant="outline"
+            colorScheme="blue"
+            onClick={() => handleHardRefresh()}
+          >
+            Hard Refresh
+          </Button>
         </div>
         <div className="flex flex-row justify-end items-center gap-2">
           <a

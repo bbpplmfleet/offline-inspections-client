@@ -294,7 +294,12 @@ self.addEventListener("message", async (e) => {
       e.ports[0].postMessage({ status: "success", response: response });
     } catch (err) {
       console.log("something failed uploading to db");
-      requestBackgroundSync();
+      try {
+        requestBackgroundSync();
+      } catch (err) {
+        console.log("Couldn't register background sync", err);
+        e.ports[0].postMessage(`Couldn't register background sync, ${err}`);
+      }
       e.ports[0].postMessage("failure");
     }
   }

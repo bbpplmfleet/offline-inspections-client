@@ -1,5 +1,5 @@
 const cacheName = "pwapoc";
-const version = "0.1.19";
+const version = "0.1.20";
 const DBName = "plm_poc";
 const DBVersion = 9;
 const contentToCache = [
@@ -91,9 +91,11 @@ async function handleUpload(posts) {
     responseData = await response.json();
     console.log("upload post request response", responseData);
     if (!response.ok) {
+      return `response not ok ${response}`;
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
   } catch (err) {
+    return `catch block: ${err}`;
     throw new Error(`HTTP error! Error: ${err}`);
   }
   return responseData;

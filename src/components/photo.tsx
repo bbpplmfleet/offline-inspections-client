@@ -16,6 +16,8 @@ export default function Photo({ post }: { post: PostSchemaType }) {
       <Text fontSize={"md"} color={"gray.300"}>
         {post.caption || <i>No Caption</i>}
       </Text>
+
+      <Text>{post.imageUrl}</Text>
       {/* {!!post.createdAt ? (
         <Text>{post.createdAt.toISOString()}</Text>
       ) : (

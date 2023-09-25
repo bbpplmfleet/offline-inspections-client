@@ -1,5 +1,5 @@
 const cacheName = "pwapoc";
-const version = "0.1.18";
+const version = "0.1.19";
 const DBName = "plm_poc";
 const DBVersion = 9;
 const contentToCache = [
@@ -288,8 +288,9 @@ self.addEventListener("message", async (e) => {
   }
 
   if (data && data.type === "UPLOAD_TO_DB") {
+    let response;
     try {
-      const response = await handleUpload(e.data.posts);
+      response = await handleUpload(e.data.posts);
       console.log("upload to db res: ", response);
       e.ports[0].postMessage({ status: "success", response: response });
     } catch (err) {
@@ -300,7 +301,7 @@ self.addEventListener("message", async (e) => {
         console.log("Couldn't register background sync", err);
         e.ports[0].postMessage(`Couldn't register background sync, ${err}`);
       }
-      e.ports[0].postMessage("failure");
+      e.ports[0].postMessage(`failure: ${response}`);
     }
   }
 

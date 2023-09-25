@@ -13,6 +13,7 @@ export default function SmartPhotoInput({
   setCurrentPhoto,
 }: ISmartPhotoInput) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [compressionRate, setCompressionRate] = useState(50);
   const [inDropZone, setInDropZone] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
   const handleDragEnter = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -55,6 +56,29 @@ export default function SmartPhotoInput({
       setInDropZone(false);
     }
   };
+  function compressImage(file: Blob | MediaSource, compressionRate: number) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = img.width * (compressionRate / 100);
+        canvas.height = img.height * (compressionRate / 100);
+        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(
+          (blob) => {
+            resolve(blob);
+          },
+          "image/jpeg",
+          0.8
+        );
+      };
+      img.onerror = (error) => {
+        reject(error);
+      };
+    });
+  }
   const toBase64 = (file: File) =>
     new Promise((resolve, reject) => {
       const fr = new FileReader();
@@ -84,7 +108,15 @@ export default function SmartPhotoInput({
     let url: string = "";
     let encoded: string = "";
     try {
-      let encodedReader = await toBase64(file);
+      // @ts-expect-error
+      const compressedBlob: BlobPart = await compressImage(
+        file,
+        compressionRate
+      );
+      const compressedFile = new File([compressedBlob], file.name, {
+        type: "image/jpeg",
+      });
+      let encodedReader = await toBase64(compressedFile);
       // @ts-expect-error
       encoded = encodedReader.result;
     } catch (e) {
@@ -105,6 +137,13 @@ export default function SmartPhotoInput({
   }
   return (
     <div className="h-80 w-96 overflow-hidden relative bg-gray-800 rounded flex gap-2 p-0.5 flex-col items-center justify-center">
+      <input
+        type="range"
+        min="0"
+        max="100"
+        value={compressionRate}
+        onChange={(e) => setCompressionRate(Number(e.target.value))}
+      />
       {imageUploading ? <>Uploading</> : <></>}
       {currentPhoto ? (
         <div className="h-full w-full relative  ">

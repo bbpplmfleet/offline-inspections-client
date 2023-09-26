@@ -13,16 +13,15 @@ export default function Photo({ post }: { post: PostSchemaType }) {
       >
         Link
       </Link>
-      {/* <div className="w-56 relative h-60 overflow-hidden rounded-lg flex flex-col justify-start items-start bg-slate-900 z-1">
+      <div className="w-56 relative h-60 overflow-hidden rounded-lg flex flex-col justify-start items-start bg-slate-900 z-1">
         <img
-          src={post.imageUrl}
+          //@ts-expect-error
+          src={post.image_url}
           alt={post.imageAlt}
           style={{ objectFit: "contain" }}
           className="rounded-md h-48"
         />
-
-        <p>{post.imageUrl}</p>
-      </div> */}
+      </div>
       <Text fontSize={"md"} color={"gray.300"}>
         {post.caption || <i>No Caption</i>}
       </Text>

@@ -4,8 +4,12 @@ import { Text, Link } from "@chakra-ui/react";
 export default function Photo({ post }: { post: PostSchemaType }) {
   return (
     <div className="bg-gray-800 flex flex-col p-2 pb-4 rounded-lg gap-2 h-full w-full">
-      <Link href={post.imageUrl} className={"border-blue border-2"}>
-        <Text>link</Text>
+      <Link
+        href={post.imageUrl}
+        isExternal
+        className={"border-blue-600 border-2 text-white-900"}
+      >
+        Link
       </Link>
       {/* <div className="w-56 relative h-60 overflow-hidden rounded-lg flex flex-col justify-start items-start bg-slate-900 z-1">
         <img

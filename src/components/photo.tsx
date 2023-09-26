@@ -2,6 +2,8 @@ import { PostSchemaType } from "../types";
 import { Text, Link } from "@chakra-ui/react";
 
 export default function Photo({ post }: { post: PostSchemaType }) {
+  console.log(post);
+  console.log(post.imageUrl);
   return (
     <div className="bg-gray-800 flex flex-col p-2 pb-4 rounded-lg gap-2 h-full w-full">
       <Link

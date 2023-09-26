@@ -1,12 +1,12 @@
 import { PostSchemaType } from "../types";
-import { Text } from "@chakra-ui/react";
+import { Text, Link } from "@chakra-ui/react";
 
 export default function Photo({ post }: { post: PostSchemaType }) {
   return (
     <div className="bg-gray-800 flex flex-col p-2 pb-4 rounded-lg gap-2 h-full w-full">
-      <a href={post.imageUrl} className={"border-blue border-2"}>
+      <Link href={post.imageUrl} className={"border-blue border-2"}>
         <Text>link</Text>
-      </a>
+      </Link>
       {/* <div className="w-56 relative h-60 overflow-hidden rounded-lg flex flex-col justify-start items-start bg-slate-900 z-1">
         <img
           src={post.imageUrl}

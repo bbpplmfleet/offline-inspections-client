@@ -1,5 +1,5 @@
 const cacheName = "pwapoc";
-const version = "0.1.20";
+const version = "0.1.21";
 const DBName = "plm_poc";
 const DBVersion = 9;
 const contentToCache = [
@@ -91,14 +91,23 @@ async function handleUpload(posts) {
     responseData = await response.json();
     console.log("upload post request response", responseData);
     if (!response.ok) {
-      return `response not ok ${response}`;
+      return {
+        wasSuccessful: false,
+        data: `response not ok ${response}`,
+      };
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
   } catch (err) {
-    return `catch block: ${err}`;
+    return {
+      wasSuccessful: false,
+      data: `catch block: ${err}`,
+    };
     throw new Error(`HTTP error! Error: ${err}`);
   }
-  return responseData;
+  return {
+    wasSuccessful: true,
+    data: responseData,
+  };
 }
 function handleNotification({ title, description, action, cta, destination }) {
   self.registration.showNotification(title, {
@@ -237,7 +246,7 @@ self.addEventListener("sync", async (event) => {
       let formattedPosts = formatPostsForServerDB(posts);
       try {
         const response = await handleUpload(formattedPosts);
-        if (response.message === "success") {
+        if (response.wasSuccessful) {
           // Remove posts from IndexedDB
           for (let post of posts) {
             await deletePost(db, post.id);
@@ -293,8 +302,10 @@ self.addEventListener("message", async (e) => {
     let response;
     try {
       response = await handleUpload(e.data.posts);
-      console.log("upload to db res: ", response);
-      e.ports[0].postMessage({ status: "success", response: response });
+      if (response.wasSuccessful) {
+        console.log("upload to db res: ", response);
+        e.ports[0].postMessage({ status: "success", response: response.data });
+      }
     } catch (err) {
       console.log("something failed uploading to db");
       try {
